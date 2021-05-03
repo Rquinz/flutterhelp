@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'package:google_maps_webservice/distance.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -15,8 +16,8 @@ class ScannerHome extends StatefulWidget {
 
 class HomePageState extends State<ScannerHome> {
   List<DataRow> rows;
+
   String result = "Hey there !";
-  int scanNumber = 0;
   String barcode = "";
 
   Future _scanQR() async {
@@ -53,7 +54,8 @@ class HomePageState extends State<ScannerHome> {
       "barcode": barcode,
     });
     //print(response.body.toString());
-    var barcodeResult = json.decode(response.body);
+    var rows = json.decode(response.body);
+    print(rows);
     setState(() {});
   }
 
@@ -66,13 +68,13 @@ class HomePageState extends State<ScannerHome> {
       body: Container(
         child: Column(
           children: <Widget>[
-            // Align(
-            //   alignment: Alignment.center,
-            //   child: Text(
-            //     sname ?? "No data",
-            //     style: TextStyle(fontSize: 20.0),
-            //   ),
-            // ),
+            Align(
+              alignment: Alignment.center,
+              child: Text(
+                result ?? "No data",
+                style: TextStyle(fontSize: 20.0),
+              ),
+            ),
             FlatButton(
               child: Text("Scan"),
               onPressed: () {
