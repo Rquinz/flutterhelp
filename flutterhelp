@@ -1,11 +1,9 @@
 import 'dart:async';
 import 'dart:convert';
-import 'package:google_maps_webservice/distance.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:barcode_scan_fix/barcode_scan.dart';
-import 'scannedmode.dart';
 
 class ScannerHome extends StatefulWidget {
   @override
@@ -15,9 +13,9 @@ class ScannerHome extends StatefulWidget {
 }
 
 class HomePageState extends State<ScannerHome> {
-  List<DataRow> rows;
-
-  String result = "Hey there !";
+  List<dynamic> barcodeRows = [];
+  String result = "";
+  int scanNumber = 0;
   String barcode = "";
 
   Future _scanQR() async {
@@ -54,9 +52,11 @@ class HomePageState extends State<ScannerHome> {
       "barcode": barcode,
     });
     //print(response.body.toString());
-    var rows = json.decode(response.body);
-    print(rows);
-    setState(() {});
+    var barcodeResult = json.decode(response.body);
+
+    setState(() {
+      barcodeResult.insertAll(0, barcodeRows);
+    });
   }
 
   @override
@@ -71,7 +71,7 @@ class HomePageState extends State<ScannerHome> {
             Align(
               alignment: Alignment.center,
               child: Text(
-                result ?? "No data",
+                "No data",
                 style: TextStyle(fontSize: 20.0),
               ),
             ),
@@ -85,6 +85,7 @@ class HomePageState extends State<ScannerHome> {
               child: Text("Get Info"),
               onPressed: () {
                 getInfo();
+                print(barcodeRows);
               },
             ),
             SingleChildScrollView(
